@@ -44,4 +44,14 @@ data class Matrix<T>(val rows: Int, val columns: Int) {
             table[col + columns * row]
         }
     }
+
+    fun valuesForLine(line: Int): List<T> {
+        return table.windowed(columns, columns)[line]
+    }
+
+    fun filterLinesBy(filter: (List<T>) -> Boolean): Matrix<T> {
+        var newtable = table.windowed(columns, columns)
+            .filter(filter)
+        return Matrix(newtable.size, columns, newtable.flatten())
+    }
 }
