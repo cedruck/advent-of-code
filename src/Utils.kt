@@ -49,9 +49,21 @@ data class Matrix<T>(val rows: Int, val columns: Int) {
         return table.windowed(columns, columns)[line]
     }
 
+    fun pointsForLine(line: Int): List<Point<T>> {
+        return table.windowed(columns, columns)[line].mapIndexed { index, t -> Point(line, index, t) }
+    }
+
+    fun value(line: Int, column: Int): T {
+        return table.windowed(columns, columns)[line][column]
+    }
+
     fun filterLinesBy(filter: (List<T>) -> Boolean): Matrix<T> {
-        var newtable = table.windowed(columns, columns)
+        val newtable = table.windowed(columns, columns)
             .filter(filter)
         return Matrix(newtable.size, columns, newtable.flatten())
     }
+}
+
+data class Point<T>(val line: Int, val column: Int, val value: T) {
+
 }
