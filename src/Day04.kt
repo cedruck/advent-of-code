@@ -17,7 +17,7 @@ fun main() {
 
         for (draw in drawnNumbers) {
             for ((index, board) in boards.withIndex()) {
-                val newBoard = board.findAndUpdate({ it.value == draw }, { it.pick() })
+                val newBoard = board.findAndUpdateOne({ it.value == draw }, { it.pick() })
                 boards[index] = newBoard
                 if (newBoard.hasCompleteColumn() || newBoard.hasCompleteLine()) {
                     win = draw * newBoard.all { !it.hasBeenPicked }.sumOf { it.value }
@@ -46,7 +46,7 @@ fun main() {
         do {
             val draw = drawnIterator.next()
             for ((index, board) in boards.withIndex()) {
-                val newBoard = board.board.findAndUpdate({ it.value == draw }, { it.pick() })
+                val newBoard = board.board.findAndUpdateOne({ it.value == draw }, { it.pick() })
                 boards[index] = WinableBoard(newBoard)
                 if (newBoard.hasCompleteColumn() || newBoard.hasCompleteLine()) {
                     boards[index] = WinableBoard(newBoard, true)
@@ -76,7 +76,7 @@ data class BingoNumber(val value: Int, var hasBeenPicked: Boolean = false) {
 
 private fun Matrix<BingoNumber>.hasCompleteLine(): Boolean {
     return this.table.windowed(this.columns, this.columns).any { lines ->
-        lines.all { it.hasBeenPicked }
+        lines.map { it.value }.all { it.hasBeenPicked }
     }
 }
 

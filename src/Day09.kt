@@ -59,7 +59,7 @@ fun main() {
     println(part2(input))
 }
 
-private operator fun Int.compareTo(surroundings: List<Int>): Int {
+private operator fun Int.compareTo(surroundings: Set<Int>): Int {
     return if (surroundings.all { it > this }) {
         -1
     } else if (surroundings.all { it < this }) {
@@ -67,26 +67,18 @@ private operator fun Int.compareTo(surroundings: List<Int>): Int {
     } else 0
 }
 
-private fun Matrix<Int>.surroundings(line: Int, column: Int): List<Int> {
+private fun Matrix<Int>.surroundings(line: Int, column: Int): Set<Int> {
 
     return (listOf(line to column - 1, line to column + 1) +
-            listOf(line - 1 to column, line + 1 to column)).filter { (line, _) ->
-        line >= 0 && line < this.rows
-    }.filter { (_, column) ->
-        column >= 0 && column < this.columns
-    }.map { (line, column) ->
+            listOf(line - 1 to column, line + 1 to column)).mapNotNull { (line, column) ->
         this.value(line, column)
-    }
+    }.toSet()
 }
 
-private fun Matrix<Int>.surroundingPoints(line: Int, column: Int): List<Point<Int>> {
+private fun Matrix<Int>.surroundingPoints(line: Int, column: Int): Set<Point<Int>> {
 
     return (listOf(line to column - 1, line to column + 1) +
-            listOf(line - 1 to column, line + 1 to column)).filter { (line, _) ->
-        line >= 0 && line < this.rows
-    }.filter { (_, column) ->
-        column >= 0 && column < this.columns
-    }.map { (line, column) ->
-        Point(line, column, this.value(line, column))
-    }
+            listOf(line - 1 to column, line + 1 to column)).mapNotNull { (line, column) ->
+        this.point(line, column)
+    }.toSet()
 }
